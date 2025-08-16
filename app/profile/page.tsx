@@ -45,6 +45,7 @@ export default function ProfilePage() {
     updatePartner, 
     breakup, 
     confirmRecovery,
+    restorePartner,
     clearError
   } = useProfileStore();
   
@@ -140,22 +141,16 @@ export default function ProfilePage() {
     }
   };
 
-  const handleGetBackTogether = () => {
-    if (!breakupData) return;
+  const handleGetBackTogether = async () => {
+    if (!breakupData?.partnerInfo) return;
     
     if (confirm(`Bạn có muốn quay lại với ${breakupData.partnerName}? Điều này sẽ khôi phục thông tin mối quan hệ.`)) {
-      // Khôi phục thông tin partner từ breakupData
-      const restoredPartner = {
-        ...breakupData.partnerInfo,
-        startDate: new Date().toISOString() // Cập nhật ngày bắt đầu mới
-      };
-      
-      useProfileStore.setState({ 
-        partner: restoredPartner, 
-        breakupData: null 
-      });
-      
-      toast.success('Chúc mừng! Đã khôi phục mối quan hệ. Chúc bạn hạnh phúc!');
+      const success = await restorePartner(breakupData.partnerInfo);
+      if (success) {
+        toast.success('Chúc mừng! Đã khôi phục mối quan hệ. Chúc bạn hạnh phúc!');
+      } else if (error) {
+        toast.error(error);
+      }
     }
   };
 
@@ -528,7 +523,7 @@ export default function ProfilePage() {
               <ul className="text-blue-200 space-y-2 text-sm">
                 <li>• Thông tin người phụ thuộc giúp AI phân tích tình duyên chính xác hơn</li>
                 <li>• Mỗi loại mối quan hệ chỉ được thêm 1 người để đảm bảo đạo đức</li>
-                <li>• Khi chia tay, thông tin sẽ được lưu 3 tháng để hỗ trợ bạn vượt qua</li>
+                <li>• Khi chia tay, thông tin sẽ được lưu 30 ngày để hỗ trợ bạn vượt qua</li>
                 <li>• Tất cả các chức năng bói sẽ tự động phân tích thêm về tình duyên</li>
               </ul>
             </motion.div>

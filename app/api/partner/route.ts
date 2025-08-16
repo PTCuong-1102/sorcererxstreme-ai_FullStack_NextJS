@@ -172,13 +172,27 @@ export async function DELETE(req: Request) {
       }, { status: 404 });
     }
 
-    // Create breakup record before deleting partner
-    await prisma.breakup.create({
+    // Check if breakup already exists
+    const existingBreakup = await prisma.breakup.findFirst({
+      where: { 
+        userId,
+        autoDeleteDate: { gte: new Date() } // Active breakup
+      },
+    });
+
+    if (existingBreakup) {
+      return NextResponse.json({ 
+        message: 'Active breakup record already exists' 
+      }, { status: 409 });
+    }
+
+    // Create breakup record with full partner info for recovery
+    const breakupRecord = await prisma.breakup.create({
       data: {
         userId,
         partnerName: existingPartner.name,
         breakupDate: new Date(),
-        autoDeleteDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // 1 tháng sau
+        autoDeleteDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // 30 ngày
         weeklyCheckDone: [],
       },
     });
@@ -188,8 +202,20 @@ export async function DELETE(req: Request) {
       where: { userId },
     });
 
+    // Return breakup record for client sync
+    const breakupData = {
+      id: breakupRecord.id,
+      isActive: true,
+      partnerName: existingPartner.name,
+      partnerInfo: existingPartner,
+      breakupDate: breakupRecord.breakupDate.toISOString(),
+      autoDeleteDate: breakupRecord.autoDeleteDate.toISOString(),
+      weeklyCheckDone: breakupRecord.weeklyCheckDone
+    };
+
     return NextResponse.json({ 
-      message: 'Partner deleted and breakup record created successfully' 
+      message: 'Partner deleted and breakup record created successfully',
+      breakupData
     }, { status: 200 });
   } catch (error) {
     console.error('Error deleting partner:', error);

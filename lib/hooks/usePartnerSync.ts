@@ -5,19 +5,53 @@ import { useAuthStore } from '../store';
 import { useProfileStore } from '../store';
 
 /**
- * Hook to sync partner data from database when user is authenticated
+ * Hook to sync partner and breakup data from database when user is authenticated
  * This ensures data consistency between different devices and sessions
+ * Also handles automatic cleanup of expired breakup data
  */
 export const usePartnerSync = () => {
   const { isAuthenticated } = useAuthStore();
-  const { fetchPartner } = useProfileStore();
+  const { fetchPartner, fetchBreakupData, confirmRecovery } = useProfileStore();
 
   useEffect(() => {
     if (isAuthenticated) {
-      // Fetch partner data from database on authentication
-      fetchPartner();
+      // Sync both partner and breakup data on authentication
+      const syncData = async () => {
+        await Promise.all([
+          fetchPartner(),
+          fetchBreakupData()
+        ]);
+      };
+
+      syncData();
     }
-  }, [isAuthenticated, fetchPartner]);
+  }, [isAuthenticated, fetchPartner, fetchBreakupData]);
+
+  // Check for expired breakup data periodically
+  useEffect(() => {
+    if (!isAuthenticated) return;
+
+    const checkExpiredBreakup = async () => {
+      const { breakupData } = useProfileStore.getState();
+      if (breakupData?.isActive) {
+        const now = new Date().getTime();
+        const autoDeleteTime = new Date(breakupData.autoDeleteDate).getTime();
+        
+        if (now >= autoDeleteTime) {
+          console.log('Breakup data expired, auto-cleaning up');
+          await confirmRecovery();
+        }
+      }
+    };
+
+    // Check every hour for expired breakup data
+    const interval = setInterval(checkExpiredBreakup, 60 * 60 * 1000);
+    
+    // Also check once on mount
+    checkExpiredBreakup();
+
+    return () => clearInterval(interval);
+  }, [isAuthenticated, confirmRecovery]);
 };
 
 export default usePartnerSync;

@@ -187,9 +187,10 @@ export interface PartnerFormData {
 }
 
 export interface BreakupData {
+  id?: string;
   isActive: boolean;
   partnerName: string;
-  partnerInfo: Partner;
+  partnerInfo?: Partner;
   breakupDate: string;
   autoDeleteDate: string;
   weeklyCheckDone: boolean[];
@@ -203,10 +204,13 @@ interface ProfileState {
   
   // API methods
   fetchPartner: () => Promise<void>;
+  fetchBreakupData: () => Promise<void>;
   addPartner: (partnerData: PartnerFormData) => Promise<boolean>;
   updatePartner: (partnerData: Partial<PartnerFormData>) => Promise<boolean>;
   breakup: () => Promise<boolean>;
-  confirmRecovery: () => void;
+  confirmRecovery: () => Promise<boolean>;
+  restorePartner: (partnerInfo: Partner) => Promise<boolean>;
+  updateWeeklyCheck: (weeklyCheckDone: boolean[]) => Promise<boolean>;
   
   // Utility methods
   clearError: () => void;
@@ -254,6 +258,30 @@ export const useProfileStore = create<ProfileState>()(
         } catch (error) {
           console.error('Error fetching partner:', error);
           set({ error: 'Failed to fetch partner data', isLoading: false });
+        }
+      },
+
+      // Fetch breakup data from database
+      fetchBreakupData: async () => {
+        try {
+          const token = getAuthToken();
+          if (!token) return;
+
+          const response = await fetch('/api/breakup', {
+            method: 'GET',
+            headers: {
+              'Authorization': `Bearer ${token}`,
+            },
+          });
+
+          if (response.ok) {
+            const breakupData = await response.json();
+            set({ breakupData });
+          } else {
+            set({ breakupData: null });
+          }
+        } catch (error) {
+          console.error('Error fetching breakup data:', error);
         }
       },
 
@@ -368,34 +396,12 @@ export const useProfileStore = create<ProfileState>()(
           });
 
           if (response.ok) {
-            // Create breakup data for local state
-            const breakupDate = new Date();
-            const autoDeleteDate = new Date(breakupDate);
-            autoDeleteDate.setMonth(autoDeleteDate.getMonth() + 1);
-
-            const breakupData: BreakupData = {
-              isActive: true,
-              partnerName: partner.name,
-              partnerInfo: partner,
-              breakupDate: breakupDate.toISOString(),
-              autoDeleteDate: autoDeleteDate.toISOString(),
-              weeklyCheckDone: []
-            };
-
+            const { breakupData } = await response.json();
             set({ 
               partner: null, 
               breakupData, 
               isLoading: false 
             });
-
-            // Auto cleanup after 1 month
-            setTimeout(() => {
-              const { breakupData: currentBreakupData } = get();
-              if (currentBreakupData && currentBreakupData.isActive) {
-                set({ breakupData: null });
-              }
-            }, 30 * 24 * 60 * 60 * 1000);
-
             return true;
           } else {
             const errorData = await response.json();
@@ -412,8 +418,123 @@ export const useProfileStore = create<ProfileState>()(
         }
       },
 
-      confirmRecovery: () => {
-        set({ breakupData: null });
+      // Confirm recovery - delete breakup record from database
+      confirmRecovery: async () => {
+        set({ isLoading: true, error: null });
+        try {
+          const token = getAuthToken();
+          if (!token) {
+            throw new Error('No authentication token');
+          }
+
+          const response = await fetch('/api/breakup', {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${token}`,
+            },
+            body: JSON.stringify({ isRecovered: true }),
+          });
+
+          if (response.ok) {
+            set({ breakupData: null, isLoading: false });
+            return true;
+          } else {
+            const errorData = await response.json();
+            set({ 
+              error: errorData.message || 'Failed to confirm recovery', 
+              isLoading: false 
+            });
+            return false;
+          }
+        } catch (error) {
+          console.error('Error confirming recovery:', error);
+          set({ error: 'Failed to confirm recovery', isLoading: false });
+          return false;
+        }
+      },
+
+      // Restore partner from breakup data
+      restorePartner: async (partnerInfo: Partner) => {
+        set({ isLoading: true, error: null });
+        try {
+          const token = getAuthToken();
+          if (!token) {
+            throw new Error('No authentication token');
+          }
+
+          const response = await fetch('/api/breakup', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${token}`,
+            },
+            body: JSON.stringify({ 
+              restorePartner: { partnerInfo } 
+            }),
+          });
+
+          if (response.ok) {
+            const { partner } = await response.json();
+            set({ 
+              partner, 
+              breakupData: null, 
+              isLoading: false 
+            });
+            return true;
+          } else {
+            const errorData = await response.json();
+            set({ 
+              error: errorData.message || 'Failed to restore partner', 
+              isLoading: false 
+            });
+            return false;
+          }
+        } catch (error) {
+          console.error('Error restoring partner:', error);
+          set({ error: 'Failed to restore partner', isLoading: false });
+          return false;
+        }
+      },
+
+      // Update weekly check status
+      updateWeeklyCheck: async (weeklyCheckDone: boolean[]) => {
+        set({ isLoading: true, error: null });
+        try {
+          const token = getAuthToken();
+          if (!token) {
+            throw new Error('No authentication token');
+          }
+
+          const response = await fetch('/api/breakup', {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${token}`,
+            },
+            body: JSON.stringify({ weeklyCheckDone }),
+          });
+
+          if (response.ok) {
+            const updatedBreakupData = await response.json();
+            set({ 
+              breakupData: updatedBreakupData, 
+              isLoading: false 
+            });
+            return true;
+          } else {
+            const errorData = await response.json();
+            set({ 
+              error: errorData.message || 'Failed to update weekly check', 
+              isLoading: false 
+            });
+            return false;
+          }
+        } catch (error) {
+          console.error('Error updating weekly check:', error);
+          set({ error: 'Failed to update weekly check', isLoading: false });
+          return false;
+        }
       }
     }),
     {

@@ -50,6 +50,7 @@ export const config = {
     '/api/fortune/:path*',
     '/api/numerology/:path*',
     '/api/partner',
+    '/api/breakup',
     '/dashboard',
     '/profile',
     '/chat',
