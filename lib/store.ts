@@ -178,6 +178,14 @@ export interface Partner {
   startDate: string;
 }
 
+export interface PartnerFormData {
+  name: string;
+  birthDate: string;
+  birthTime: string;
+  birthPlace: string;
+  relationship: 'married' | 'dating' | 'interested';
+}
+
 export interface BreakupData {
   isActive: boolean;
   partnerName: string;
@@ -190,59 +198,207 @@ export interface BreakupData {
 interface ProfileState {
   partner: Partner | null;
   breakupData: BreakupData | null;
-  addPartner: (partnerData: Omit<Partner, 'id' | 'startDate'>) => void;
-  updatePartner: (partnerData: Partial<Partner>) => void;
-  breakup: () => void;
+  isLoading: boolean;
+  error: string | null;
+  
+  // API methods
+  fetchPartner: () => Promise<void>;
+  addPartner: (partnerData: PartnerFormData) => Promise<boolean>;
+  updatePartner: (partnerData: Partial<PartnerFormData>) => Promise<boolean>;
+  breakup: () => Promise<boolean>;
   confirmRecovery: () => void;
+  
+  // Utility methods
+  clearError: () => void;
+  setLoading: (loading: boolean) => void;
 }
+// Helper function to get auth token
+const getAuthToken = (): string | null => {
+  if (typeof window === 'undefined') return null;
+  return document.cookie.split('; ').find(row => row.startsWith('token='))?.split('=')[1] || null;
+};
 
 export const useProfileStore = create<ProfileState>()(
   persist(
     (set, get) => ({
       partner: null,
       breakupData: null,
+      isLoading: false,
+      error: null,
 
-      addPartner: (partnerData) => {
-        const newPartner: Partner = {
-          ...partnerData,
-          id: Date.now().toString(),
-          startDate: new Date().toISOString()
-        };
-        set({ partner: newPartner, breakupData: null });
-      },
+      clearError: () => set({ error: null }),
+      setLoading: (loading: boolean) => set({ isLoading: loading }),
 
-      updatePartner: (partnerData) => {
-        const { partner } = get();
-        if (partner) {
-          set({ partner: { ...partner, ...partnerData } });
+      // Fetch partner from database
+      fetchPartner: async () => {
+        set({ isLoading: true, error: null });
+        try {
+          const token = getAuthToken();
+          if (!token) {
+            throw new Error('No authentication token');
+          }
+
+          const response = await fetch('/api/partner', {
+            method: 'GET',
+            headers: {
+              'Authorization': `Bearer ${token}`,
+            },
+          });
+
+          if (response.ok) {
+            const partner = await response.json();
+            set({ partner: partner || null, isLoading: false });
+          } else {
+            set({ partner: null, isLoading: false });
+          }
+        } catch (error) {
+          console.error('Error fetching partner:', error);
+          set({ error: 'Failed to fetch partner data', isLoading: false });
         }
       },
 
-      breakup: () => {
-        const { partner } = get();
-        if (partner) {
-          const breakupDate = new Date();
-          const autoDeleteDate = new Date(breakupDate);
-          autoDeleteDate.setMonth(autoDeleteDate.getMonth() + 1); // Thay đổi từ 3 tháng thành 1 tháng
+      // Add new partner to database
+      addPartner: async (partnerData: PartnerFormData) => {
+        set({ isLoading: true, error: null });
+        try {
+          const token = getAuthToken();
+          if (!token) {
+            throw new Error('No authentication token');
+          }
 
-          const breakupData: BreakupData = {
-            isActive: true,
-            partnerName: partner.name,
-            partnerInfo: partner,
-            breakupDate: breakupDate.toISOString(),
-            autoDeleteDate: autoDeleteDate.toISOString(),
-            weeklyCheckDone: []
-          };
+          const response = await fetch('/api/partner', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${token}`,
+            },
+            body: JSON.stringify(partnerData),
+          });
 
-          set({ partner: null, breakupData });
+          if (response.ok) {
+            const newPartner = await response.json();
+            set({ 
+              partner: newPartner, 
+              breakupData: null, 
+              isLoading: false 
+            });
+            return true;
+          } else {
+            const errorData = await response.json();
+            set({ 
+              error: errorData.message || 'Failed to add partner', 
+              isLoading: false 
+            });
+            return false;
+          }
+        } catch (error) {
+          console.error('Error adding partner:', error);
+          set({ error: 'Failed to add partner', isLoading: false });
+          return false;
+        }
+      },
 
-          // Tự động xóa sau 1 tháng
-          setTimeout(() => {
-            const { breakupData: currentBreakupData } = get();
-            if (currentBreakupData && currentBreakupData.isActive) {
-              set({ breakupData: null });
-            }
-          }, 30 * 24 * 60 * 60 * 1000); // 1 tháng
+      // Update partner in database
+      updatePartner: async (partnerData: Partial<PartnerFormData>) => {
+        set({ isLoading: true, error: null });
+        try {
+          const token = getAuthToken();
+          if (!token) {
+            throw new Error('No authentication token');
+          }
+
+          const response = await fetch('/api/partner', {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${token}`,
+            },
+            body: JSON.stringify(partnerData),
+          });
+
+          if (response.ok) {
+            const updatedPartner = await response.json();
+            set({ partner: updatedPartner, isLoading: false });
+            return true;
+          } else {
+            const errorData = await response.json();
+            set({ 
+              error: errorData.message || 'Failed to update partner', 
+              isLoading: false 
+            });
+            return false;
+          }
+        } catch (error) {
+          console.error('Error updating partner:', error);
+          set({ error: 'Failed to update partner', isLoading: false });
+          return false;
+        }
+      },
+
+      // Delete partner and create breakup record
+      breakup: async () => {
+        set({ isLoading: true, error: null });
+        try {
+          const token = getAuthToken();
+          if (!token) {
+            throw new Error('No authentication token');
+          }
+
+          const { partner } = get();
+          if (!partner) {
+            set({ error: 'No partner to break up with', isLoading: false });
+            return false;
+          }
+
+          const response = await fetch('/api/partner', {
+            method: 'DELETE',
+            headers: {
+              'Authorization': `Bearer ${token}`,
+            },
+          });
+
+          if (response.ok) {
+            // Create breakup data for local state
+            const breakupDate = new Date();
+            const autoDeleteDate = new Date(breakupDate);
+            autoDeleteDate.setMonth(autoDeleteDate.getMonth() + 1);
+
+            const breakupData: BreakupData = {
+              isActive: true,
+              partnerName: partner.name,
+              partnerInfo: partner,
+              breakupDate: breakupDate.toISOString(),
+              autoDeleteDate: autoDeleteDate.toISOString(),
+              weeklyCheckDone: []
+            };
+
+            set({ 
+              partner: null, 
+              breakupData, 
+              isLoading: false 
+            });
+
+            // Auto cleanup after 1 month
+            setTimeout(() => {
+              const { breakupData: currentBreakupData } = get();
+              if (currentBreakupData && currentBreakupData.isActive) {
+                set({ breakupData: null });
+              }
+            }, 30 * 24 * 60 * 60 * 1000);
+
+            return true;
+          } else {
+            const errorData = await response.json();
+            set({ 
+              error: errorData.message || 'Failed to process breakup', 
+              isLoading: false 
+            });
+            return false;
+          }
+        } catch (error) {
+          console.error('Error processing breakup:', error);
+          set({ error: 'Failed to process breakup', isLoading: false });
+          return false;
         }
       },
 
@@ -251,7 +407,11 @@ export const useProfileStore = create<ProfileState>()(
       }
     }),
     {
-      name: 'profile-storage'
+      name: 'profile-storage',
+      partialize: (state) => ({ 
+        partner: state.partner, 
+        breakupData: state.breakupData 
+      }),
     }
   )
 );

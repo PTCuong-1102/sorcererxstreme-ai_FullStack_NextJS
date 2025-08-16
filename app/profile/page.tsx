@@ -3,9 +3,10 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
-import { User, Heart, Plus, Edit, Trash2, Calendar, MapPin, Clock, Users } from 'lucide-react';
+import { User, Heart, Plus, Edit, Trash2, Calendar, MapPin, Clock, Users, Loader2, AlertCircle } from 'lucide-react';
 import { Sidebar } from '@/components/layout/Sidebar';
 import { useAuthStore, useProfileStore } from '@/lib/store';
+import { usePartnerSync } from '@/lib/hooks/usePartnerSync';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import toast from 'react-hot-toast';
@@ -35,7 +36,20 @@ export default function ProfilePage() {
   });
 
   const { user, isAuthenticated, updateProfile } = useAuthStore();
-  const { partner, breakupData, addPartner, updatePartner, breakup, confirmRecovery } = useProfileStore();
+  const { 
+    partner, 
+    breakupData, 
+    isLoading, 
+    error,
+    addPartner, 
+    updatePartner, 
+    breakup, 
+    confirmRecovery,
+    clearError
+  } = useProfileStore();
+  
+  // Sync partner data from database
+  usePartnerSync();
 
   const [editForm, setEditForm] = useState({
     name: user?.name || '',
@@ -91,30 +105,38 @@ export default function ProfilePage() {
     }
   };
 
-  const handleAddPartner = () => {
+  const handleAddPartner = async () => {
     if (!partnerForm.name || !partnerForm.birthDate || !partnerForm.birthTime || !partnerForm.birthPlace) {
       toast.error('Vui lòng điền đầy đủ thông tin');
       return;
     }
 
-    addPartner(partnerForm);
-    setPartnerForm({
-      name: '',
-      birthDate: '',
-      birthTime: '',
-      birthPlace: '',
-      relationship: 'dating'
-    });
-    setShowAddPartner(false);
-    toast.success('Đã thêm thông tin người phụ thuộc!');
+    const success = await addPartner(partnerForm);
+    if (success) {
+      setPartnerForm({
+        name: '',
+        birthDate: '',
+        birthTime: '',
+        birthPlace: '',
+        relationship: 'dating'
+      });
+      setShowAddPartner(false);
+      toast.success('Đã thêm thông tin người phụ thuộc!');
+    } else if (error) {
+      toast.error(error);
+    }
   };
 
-  const handleBreakup = () => {
+  const handleBreakup = async () => {
     if (!partner) return;
     
     if (confirm('Bạn có chắc chắn muốn xác nhận chia tay? Thông tin này sẽ được lưu trong 1 tháng để hỗ trợ bạn.')) {
-      breakup();
-      toast.success('Đã cập nhật trạng thái. Chúng tôi sẽ hỗ trợ bạn trong thời gian này.');
+      const success = await breakup();
+      if (success) {
+        toast.success('Đã cập nhật trạng thái. Chúng tôi sẽ hỗ trợ bạn trong thời gian này.');
+      } else if (error) {
+        toast.error(error);
+      }
     }
   };
 
@@ -372,15 +394,53 @@ export default function ProfilePage() {
                           />
                         </div>
                       </div>
+                      {/* Error Display */}
+                      {error && (
+                        <AnimatePresence>
+                          <motion.div
+                            initial={{ opacity: 0, y: -10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: -10 }}
+                            className="bg-red-600/20 border border-red-500/30 rounded-xl p-4 mb-4 flex items-center"
+                          >
+                            <AlertCircle className="w-5 h-5 text-red-400 mr-3 flex-shrink-0" />
+                            <div className="flex-1">
+                              <p className="text-red-300 text-sm">{error}</p>
+                            </div>
+                            <Button
+                              onClick={clearError}
+                              variant="ghost"
+                              size="sm"
+                              className="text-red-400 hover:text-red-300 p-1"
+                            >
+                              ×
+                            </Button>
+                          </motion.div>
+                        </AnimatePresence>
+                      )}
                       <div className="flex gap-4 mt-6">
-                        <Button onClick={handleAddPartner} className="whitespace-nowrap">
-                          <Plus className="w-4 h-4 mr-2" />
-                          Thêm
+                        <Button 
+                          onClick={handleAddPartner} 
+                          className="whitespace-nowrap" 
+                          disabled={isLoading}
+                        >
+                          {isLoading ? (
+                            <>
+                              <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                              Đang thêm...
+                            </>
+                          ) : (
+                            <>
+                              <Plus className="w-4 h-4 mr-2" />
+                              Thêm
+                            </>
+                          )}
                         </Button>
                         <Button
                           onClick={() => setShowAddPartner(false)}
                           variant="secondary"
                           className="whitespace-nowrap"
+                          disabled={isLoading}
                         >
                           Hủy
                         </Button>
