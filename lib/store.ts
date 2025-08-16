@@ -262,10 +262,15 @@ export const useProfileStore = create<ProfileState>()(
         set({ isLoading: true, error: null });
         try {
           const token = getAuthToken();
+          console.log('Client: Token found:', token ? 'Yes' : 'No');
+          console.log('Client: Token preview:', token?.substring(0, 20) + '...');
           if (!token) {
             throw new Error('No authentication token');
           }
 
+          console.log('Client: Sending request to /api/partner');
+          console.log('Client: Request body:', JSON.stringify(partnerData));
+          
           const response = await fetch('/api/partner', {
             method: 'POST',
             headers: {
@@ -275,8 +280,12 @@ export const useProfileStore = create<ProfileState>()(
             body: JSON.stringify(partnerData),
           });
 
+          console.log('Client: Response status:', response.status);
+          console.log('Client: Response ok:', response.ok);
+          
           if (response.ok) {
             const newPartner = await response.json();
+            console.log('Client: New partner created:', newPartner);
             set({ 
               partner: newPartner, 
               breakupData: null, 
@@ -285,6 +294,7 @@ export const useProfileStore = create<ProfileState>()(
             return true;
           } else {
             const errorData = await response.json();
+            console.log('Client: Error response:', errorData);
             set({ 
               error: errorData.message || 'Failed to add partner', 
               isLoading: false 
