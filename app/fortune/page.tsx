@@ -118,18 +118,18 @@ export default function FortunePage() {
       anCu: randomCuc,
     };
 
-    const cung12 = [];
+    const cung12: TuViChartData['cung12'] = [];
     for (let i = 0; i < 12; i++) {
       const saoChinhCount = Math.floor(Math.random() * 3) + 1;
       const saoSatCount = Math.floor(Math.random() * 4) + 1;
 
-      const randomSaoChinh = [];
+      const randomSaoChinh: string[] = [];
       for (let j = 0; j < saoChinhCount; j++) {
         const sao = saoChinhTinh[Math.floor(Math.random() * saoChinhTinh.length)];
         if (!randomSaoChinh.includes(sao)) randomSaoChinh.push(sao);
       }
 
-      const randomSaoSat = [];
+      const randomSaoSat: string[] = [];
       for (let j = 0; j < saoSatCount; j++) {
         const sao = saoSatTinh[Math.floor(Math.random() * saoSatTinh.length)];
         if (!randomSaoSat.includes(sao)) randomSaoSat.push(sao);
@@ -170,7 +170,7 @@ export default function FortunePage() {
   };
 
   const getCungYNghia = (cungName: string) => {
-    const yNghiaMap = {
+    const yNghiaMap: Record<string, string> = {
       'Mệnh': 'Thể hiện tính cách, vận mệnh, sức khỏe và cuộc đời tổng quát',
       'Phụ Mẫu': 'Quan hệ với cha mẹ, gia đình, nguồn gốc xuất thân',
       'Phúc Đức': 'Tinh thần, tâm linh, phúc báo và hưởng thụ',
@@ -244,7 +244,7 @@ export default function FortunePage() {
   };
 
   const getTuViCungAdvice = (cungName: string) => {
-    const adviceMap = {
+    const adviceMap: Record<string, string> = {
       'Mệnh': 'Tự tin thể hiện bản thân và phát huy điểm mạnh',
       'Phụ Mẫu': 'Hiếu thảo với cha mẹ, quan tâm gia đình',
       'Phúc Đức': 'Tu tâm dưỡng tính, làm việc thiện tạo phúc',
@@ -262,7 +262,7 @@ export default function FortunePage() {
   };
 
   const getTuViLuckyColor = (nguyenHanh: string) => {
-    const colorMap = {
+    const colorMap: Record<string, string> = {
       'Kim': 'Trắng, Vàng kim loại',
       'Mộc': 'Xanh lá cây, Xanh lục',
       'Thủy': 'Đen, Xanh nước biển',
@@ -273,7 +273,7 @@ export default function FortunePage() {
   };
 
   const getTuViLuckyDirection = (diaChi: string) => {
-    const directionMap = {
+    const directionMap: Record<string, string> = {
       'Tý': 'Bắc',
       'Sửu': 'Đông Bắc',
       'Dần': 'Đông Bắc',
@@ -291,7 +291,7 @@ export default function FortunePage() {
   };
 
   const getTuViLuckyNumber = (cuc: string) => {
-    const numberMap = {
+    const numberMap: Record<string, string> = {
       'Thủy Nhị Cục': '1, 2, 6',
       'Mộc Tam Cục': '3, 8, 9',
       'Kim Tứ Cục': '4, 7, 9',
@@ -437,7 +437,7 @@ export default function FortunePage() {
   };
 
   const getCareerAdvice = (zodiac: any) => {
-    const advices = {
+    const advices: any = {
       'Thìn': 'Hôm nay là ngày tuyệt vời để bạn thể hiện khả năng lãnh đạo của bạn. Các dự án quan trọng sẽ có tiến triển tích cực.',
       'Tý': 'Trí thông minh của bạn sẽ được đánh giá cao. Đây là thời điểm tốt để đưa ra những ý tưởng sáng tạo.',
     };
@@ -445,7 +445,7 @@ export default function FortunePage() {
   };
 
   const getFinanceAdvice = (zodiac: any) => {
-    const financeMap = {
+    const financeMap: any = {
       'Kim': 'Vận tài lộc khá thuận lợi. Có thể có những cơ hội đầu tư hoặc thu nhập bất ngờ.',
       'Thủy': 'Tài chính ổn định nhưng nên tiết kiệm và đầu tư thông minh.',
     };
@@ -453,7 +453,7 @@ export default function FortunePage() {
   };
 
   const getHealthAdvice = (zodiac: any) => {
-    const healthMap = {
+    const healthMap: any = {
       'Mộc': 'Sức khỏe tốt, năng lượng dồi dào. Thích hợp cho các hoạt động thể thao và giải trí.',
       'Hỏa': 'Cần chú ý đến việc nghỉ ngơi và giảm stress. Tránh làm việc quá sức.',
     };
@@ -478,7 +478,7 @@ export default function FortunePage() {
       'Hỏa': 'Đỏ, Cam',
       'Thổ': 'Vàng, Nâu',
     };
-    return colorMap[zodiac?.element] || 'Trắng, Xanh';
+    return (colorMap as any)[zodiac?.element] || 'Trắng, Xanh';
   };
 
   const getDailyAdvice = () => {

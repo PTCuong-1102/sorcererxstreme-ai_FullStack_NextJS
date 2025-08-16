@@ -145,18 +145,18 @@ export default function ComprehensiveFortunePage() {
       anCu: randomCuc,
     };
 
-    const cung12 = [];
+    const cung12: TuViChartData['cung12'] = [];
     for (let i = 0; i < 12; i++) {
       const saoChinhCount = Math.floor(Math.random() * 3) + 1;
       const saoSatCount = Math.floor(Math.random() * 4) + 1;
 
-      const randomSaoChinh = [];
+      const randomSaoChinh: string[] = [];
       for (let j = 0; j < saoChinhCount; j++) {
         const sao = saoChinhTinh[Math.floor(Math.random() * saoChinhTinh.length)];
         if (!randomSaoChinh.includes(sao)) randomSaoChinh.push(sao);
       }
 
-      const randomSaoSat = [];
+      const randomSaoSat: string[] = [];
       for (let j = 0; j < saoSatCount; j++) {
         const sao = saoSatTinh[Math.floor(Math.random() * saoSatTinh.length)];
         if (!randomSaoSat.includes(sao)) randomSaoSat.push(sao);
@@ -197,7 +197,7 @@ export default function ComprehensiveFortunePage() {
   };
 
   const getCungYNghia = (cungName: string) => {
-    const yNghiaMap = {
+    const yNghiaMap: Record<string, string> = {
       'Mệnh': 'Thể hiện tính cách, vận mệnh, sức khỏe và cuộc đời tổng quát',
       'Phụ Mẫu': 'Quan hệ với cha mẹ, gia đình, nguồn gốc xuất thân',
       'Phúc Đức': 'Tinh thần, tâm linh, phúc báo và hưởng thụ',
@@ -256,7 +256,7 @@ export default function ComprehensiveFortunePage() {
   };
 
   const generateTuViAnalysis = (data: TuViChartData) => {
-    const birthPlace = user?.birthPlace || 'Chưa cập nhật';
+    const birthPlace = 'Chưa cập nhật';
 
     const cungAnalysis = data.cung12.map(cung => {
       const saoChinhText = cung.saoChinhTinh.length > 0 ? cung.saoChinhTinh.join(', ') : 'Không có chính tinh';
@@ -271,7 +271,7 @@ export default function ComprehensiveFortunePage() {
   };
 
   const getTuViCungAdvice = (cungName: string) => {
-    const adviceMap = {
+    const adviceMap: Record<string, string> = {
       'Mệnh': 'Tự tin thể hiện bản thân và phát huy điểm mạnh',
       'Phụ Mẫu': 'Hiếu thảo với cha mẹ, quan tâm gia đình',
       'Phúc Đức': 'Tu tâm dưỡng tính, làm việc thiện tạo phúc',
@@ -289,7 +289,7 @@ export default function ComprehensiveFortunePage() {
   };
 
   const getTuViLuckyColor = (nguyenHanh: string) => {
-    const colorMap = {
+    const colorMap: Record<string, string> = {
       'Kim': 'Trắng, Vàng kim loại',
       'Mộc': 'Xanh lá cây, Xanh lục',
       'Thủy': 'Đen, Xanh nước biển',
@@ -300,7 +300,7 @@ export default function ComprehensiveFortunePage() {
   };
 
   const getTuViLuckyDirection = (diaChi: string) => {
-    const directionMap = {
+    const directionMap: Record<string, string> = {
       'Tý': 'Bắc',
       'Sửu': 'Đông Bắc',
       'Dần': 'Đông Bắc',
@@ -318,7 +318,7 @@ export default function ComprehensiveFortunePage() {
   };
 
   const getTuViLuckyNumber = (cuc: string) => {
-    const numberMap = {
+    const numberMap: Record<string, string> = {
       'Thủy Nhị Cục': '1, 2, 6',
       'Mộc Tam Cục': '3, 8, 9',
       'Kim Tứ Cục': '4, 7, 9',

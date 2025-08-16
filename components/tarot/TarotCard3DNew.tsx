@@ -2,7 +2,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { motion, useAnimation, AnimatePresence } from 'framer-motion';
+import { motion, useAnimation, AnimatePresence, Variants } from 'framer-motion';
 import { Sparkles } from 'lucide-react';
 
 interface TarotCard3DNewProps {
@@ -87,14 +87,14 @@ export const TarotCard3DNew: React.FC<TarotCard3DNewProps> = ({
     }
   };
 
-  const glowVariants = {
+  const glowVariants: Variants = {
     animate: {
       opacity: 1,
       scale: 1.1,
       transition: {
         duration: 2,
         repeat: Infinity,
-        repeatType: "reverse",
+        repeatType: 'reverse' as const,
         ease: "easeInOut"
       }
     }

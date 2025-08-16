@@ -16,6 +16,7 @@ interface User {
 interface AuthState {
   user: User | null;
   isAuthenticated: boolean;
+  token: string | null;
   login: (email: string, password: string) => Promise<boolean>;
   register: (email: string, password: string) => Promise<boolean>;
   completeProfile: (name: string, birthDate: string, birthTime: string, token: string) => Promise<void>;
@@ -28,6 +29,7 @@ export const useAuthStore = create<AuthState>()(
     (set, get) => ({
       user: null,
       isAuthenticated: false,
+      token: null,
 
       login: async (email: string, password: string) => {
         console.log('login called');
@@ -48,7 +50,7 @@ export const useAuthStore = create<AuthState>()(
           document.cookie = `token=${token}; path=/; max-age=604800;`; // 7 days
           const isProfileComplete = !!(user.name && user.birthDate && user.birthTime);
           console.log('isProfileComplete:', isProfileComplete);
-          set({ user: { ...user, isProfileComplete }, isAuthenticated: true });
+          set({ user: { ...user, isProfileComplete }, isAuthenticated: true, token });
           return true;
         } catch (error) {
           console.error(error);
@@ -124,7 +126,7 @@ export const useAuthStore = create<AuthState>()(
 
       logout: () => {
         document.cookie = 'token=; path=/; max-age=0';
-        set({ user: null, isAuthenticated: false });
+        set({ user: null, isAuthenticated: false, token: null });
       }
     }),
     {

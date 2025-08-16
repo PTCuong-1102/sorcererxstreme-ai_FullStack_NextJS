@@ -45,7 +45,12 @@ export default function HouseChart3D({ birthDate, birthTime, birthPlace, userZod
     { name: 'Song Ngư', symbol: '♓', element: 'Thủy', color: '#6366f1' }
   ];
 
-  const getCompatibility = (userElement: string, otherElement: string, userSign: string, otherSign: string) => {
+  const getCompatibility = (
+    userElement: string,
+    otherElement: string,
+    userSign: string,
+    otherSign: string
+  ): 'excellent' | 'good' | 'neutral' | 'challenging' => {
     if (userElement === otherElement) return 'excellent';
 
     if ((userElement === 'Hỏa' && otherElement === 'Khí') ||
@@ -65,8 +70,12 @@ export default function HouseChart3D({ birthDate, birthTime, birthPlace, userZod
     return 'neutral';
   };
 
-  const getRelationshipType = (compatibility: string, userSign: string, otherSign: string) => {
-    const relationships = {
+  const getRelationshipType = (
+    compatibility: 'excellent' | 'good' | 'neutral' | 'challenging',
+    userSign: string,
+    otherSign: string
+  ) => {
+    const relationships: Record<'excellent' | 'good' | 'neutral' | 'challenging', string[]> = {
       'excellent': ['Đồng minh tự nhiên', 'Tri kỷ tâm linh', 'Người bạn đồng hành', 'Đối tác hoàn hảo'],
       'good': ['Bạn tốt', 'Đối tác kinh doanh', 'Người cố vấn', 'Nguồn cảm hứng'],
       'neutral': ['Mối quan hệ cân bằng', 'Học hỏi lẫn nhau', 'Tương tác bình thường', 'Khám phá tiềm năng'],
@@ -76,8 +85,11 @@ export default function HouseChart3D({ birthDate, birthTime, birthPlace, userZod
     return relationships[compatibility][Math.floor(Math.random() * relationships[compatibility].length)];
   };
 
-  const getInfluence = (compatibility: string, otherElement: string) => {
-    const influences = {
+  const getInfluence = (
+    compatibility: 'excellent' | 'good' | 'neutral' | 'challenging',
+    otherElement: string
+  ) => {
+    const influences: Record<'excellent' | 'good' | 'neutral' | 'challenging', Record<string, string>> = {
       'excellent': {
         'Hỏa': 'Tăng cường năng lượng và sự nhiệt huyết',
         'Thổ': 'Mang lại sự ổn định và thực tế',

@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { User, Heart, Plus, Edit, Trash2, Calendar, MapPin, Clock, Users } from 'lucide-react';
 import { Sidebar } from '@/components/layout/Sidebar';
@@ -16,9 +17,16 @@ const relationshipTypes = [
 ];
 
 export default function ProfilePage() {
+  const router = useRouter();
   const [isEditing, setIsEditing] = useState(false);
   const [showAddPartner, setShowAddPartner] = useState(false);
-  const [partnerForm, setPartnerForm] = useState({
+  const [partnerForm, setPartnerForm] = useState<{ 
+    name: string;
+    birthDate: string;
+    birthTime: string;
+    birthPlace: string;
+    relationship: 'married' | 'dating' | 'interested';
+  }>({
     name: '',
     birthDate: '',
     birthTime: '',
@@ -57,7 +65,7 @@ export default function ProfilePage() {
             // Cập nhật lại store với thông tin check mới
             const updatedBreakupData = { ...breakupData, weeklyCheckDone: updatedChecks };
             useProfileStore.setState({ breakupData: updatedBreakupData });
-            toast.info('Chúng tôi sẽ tiếp tục hỗ trợ bạn. Hãy kiên nhẫn, mọi thứ sẽ tốt lên!');
+            toast('Chúng tôi sẽ tiếp tục hỗ trợ bạn. Hãy kiên nhẫn, mọi thứ sẽ tốt lên!');
           }
         }, 2000);
       }
@@ -329,7 +337,7 @@ export default function ProfilePage() {
                           <label className="block text-sm text-gray-400 mb-2">Mối quan hệ</label>
                           <select
                             value={partnerForm.relationship}
-                            onChange={(e) => setPartnerForm({...partnerForm, relationship: e.target.value})}
+                            onChange={(e) => setPartnerForm({...partnerForm, relationship: e.target.value as 'married' | 'dating' | 'interested'})}
                             className="w-full px-4 py-3 bg-gray-900/50 border border-gray-600/50 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-red-500/50 focus:border-red-500/50 transition-all pr-8"
                           >
                             {relationshipTypes.map(type => (

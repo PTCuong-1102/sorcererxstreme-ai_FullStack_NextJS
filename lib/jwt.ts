@@ -2,7 +2,7 @@ import { verify, sign } from 'jsonwebtoken';
 
 export function verifyJWT(token: string): Promise<{ userId: string }> {
   return new Promise((resolve, reject) => {
-    verify(token, process.env.JWT_SECRET!, (err, decoded) => {
+    verify(token, process.env.JWT_SECRET!, (err: any, decoded: any) => {
       if (err) {
         return reject(err);
       }

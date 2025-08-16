@@ -6,11 +6,13 @@ import { motion } from 'framer-motion';
 interface LoadingSpinnerProps {
   size?: 'sm' | 'md' | 'lg';
   text?: string;
+  className?: string;
 }
 
 export const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({ 
   size = 'md', 
-  text = 'Đang tải...' 
+  text = 'Đang tải...',
+  className
 }) => {
   const sizes = {
     sm: 'w-4 h-4',
@@ -19,7 +21,7 @@ export const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
   };
 
   return (
-    <div className="flex flex-col items-center justify-center space-y-4">
+    <div className={`flex flex-col items-center justify-center space-y-4 ${className ?? ''}`}>
       <motion.div
         className={`${sizes[size]} border-2 border-gray-700 border-t-crimson-500 rounded-full`}
         animate={{ rotate: 360 }}
