@@ -4,6 +4,9 @@ import { getAiResponse } from '@/lib/gemini';
 import { generateAstrologyPrompt } from '@/lib/ai-prompts';
 import { addBreakupContextToPrompt, getComfortingMessage } from '@/lib/breakup-utils';
 
+// Force dynamic rendering for this API route
+export const dynamic = 'force-dynamic';
+
 export async function POST(req: Request) {
   try {
     const userId = req.headers.get('x-user-id');

@@ -7,6 +7,9 @@ import { addBreakupContextToPrompt, getComfortingMessage } from '@/lib/breakup-u
 
 const prisma = new PrismaClient();
 
+// Force dynamic rendering for this API route
+export const dynamic = 'force-dynamic';
+
 export async function POST(req: Request) {
   try {
     const userId = req.headers.get('x-user-id');
