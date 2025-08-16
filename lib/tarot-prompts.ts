@@ -31,26 +31,26 @@ Bạn là một Master Tarot Reader với 20+ năm kinh nghiệm. Khách hàng �
 
 📝 **CẤU TRÚC PHẢN HỒI YÊU CẦU:**
 
-**🌟 PHẦN 1: THÔNG ĐIỆP CHÍNH (150-200 từ)**
+**🌟 PHẦN 1: THÔNG ĐIỆP CHÍNH **
 - Ý nghĩa tổng quát của lá bài ${cardsDrawn[0]} cho câu hỏi này
 - Kết nối trực tiếp với tình huống khách hàng đang thắc mắc
 
-**🔍 PHẦN 2: PHÂN TÍCH SÂU (200-250 từ)**
+**🔍 PHẦN 2: PHÂN TÍCH SÂU **
 - Giải thích chi tiết biểu tượng trong lá bài
 - Ứng dụng cụ thể vào câu hỏi đã đặt ra
 - Những yếu tố ảnh hưởng đến tình huống
 
-**🛤️ PHẦN 3: HƯỚNG DẪN HÀNH ĐỘNG (150-200 từ)**
+**🛤️ PHẦN 3: HƯỚNG DẪN HÀNH ĐỘNG **
 - Lời khuyên cụ thể cho các bước tiếp theo
 - Cảnh báo về những điều cần tránh
 - Thời điểm thuận lợi để hành động
 
-**💫 PHẦN 4: KẾT LUẬN VÀ TƯƠNG LAI (100-150 từ)**
+**💫 PHẦN 4: KẾT LUẬN VÀ TƯƠNG LAI **
 - Tóm tắt thông điệp quan trọng nhất
 - Dự đoán xu hướng phát triển
 - Lời động viên và khích lệ
 
-HÃY VIẾT NỘI DUNG PHONG PHÚ, SÂUSẮC VÀ TẠO CẢM HỨNG!`;
+HÃY VIẾT NỘI DUNG TRONG PHẠM VI 500-800 TỪ PHONG PHÚ, SÂU SẮC VÀ TẠO CẢM HỨNG!`;
   }
 
   if (mode === 'love') {
@@ -62,27 +62,27 @@ ${userContext?.isInBreakup ? `💔 **TÌNH TRẠNG:** Đang trong giai đoạn c
 
 📝 **CẤU TRÚC PHẢN HỒI YÊU CẦU:**
 
-**💖 PHẦN 1: TÌNH TRẠNG TÌNH CẢM HIỆN TẠI (150-200 từ)**
+**💖 PHẦN 1: TÌNH TRẠNG TÌNH CẢM HIỆN TẠI**
 - Phân tích 3 lá bài: ${cardsDrawn.join(', ')}
 - Năng lượng tình cảm xung quanh khách hàng
 - Những ảnh hưởng từ quá khứ đến hiện tại
 
-**🌹 PHẦN 2: DIỄN BIẾN TÌNH DUYÊN (200-250 từ)**
+**🌹 PHẦN 2: DIỄN BIẾN TÌNH DUYÊN **
 - Dự đoán phát triển trong 3-6 tháng tới
 - Những cơ hội và thách thức sắp tới
 - Yếu tố quyết định thành công trong tình yêu
 
-**💝 PHẦN 3: NHỮNG MỐI QUAN HỆ CHỦ CHỐT (150-200 từ)**
+**💝 PHẦN 3: NHỮNG MỐI QUAN HỆ CHỦ CHỐT **
 ${userContext?.hasPartner ? '- Phân tích mối quan hệ hiện tại và tiềm năng phát triển' : '- Dự đoán về người yêu tương lai và thời điểm gặp gỡ'}
 - Những điều cần cải thiện trong cách yêu
 - Cách thu hút và giữ chân tình yêu
 
-**✨ PHẦN 4: LỜI KHUYÊN TÌNH DUYÊN (100-150 từ)**
+**✨ PHẦN 4: LỜI KHUYÊN TÌNH DUYÊN **
 - Hành động cụ thể để cải thiện tình cảm
 - Những điều cần tránh trong tình yêu
 - Thông điệp khích lệ từ vũ trụ
 
-HÃY TẠO RA MỘT BÀI ĐỌC TAROT TÌNH DUYÊN SÂU SẮC VÀ LÃNG MẠN!`;
+HÃY TẠO RA MỘT BÀI ĐỌC TAROT TỪ 500-800 TỪ VỀ TÌNH DUYÊN SÂU SẮC VÀ LÃNG MẠN!`;
   }
 
   // mode === 'overview'

@@ -283,7 +283,7 @@ ${userContext.hasPartner ? `- Đang có người yêu: ${userContext.partnerName
 ${userContext.isInBreakup ? `- Tình trạng: Đang trải qua giai đoạn chia ly` : ''}
 
 📋 **TIÊU CHUẨN PHÂN TÍCH:**
-- Tối thiểu 900-1200 từ cho phân tích toàn diện
+- Tối thiểu 900-1000 từ cho phân tích toàn diện
 - Sử dụng thuật ngữ Tử Vi truyền thống nhưng giải thích dễ hiểu
 - Bao gồm phân tích Chi tiết về Mệnh, Tài, Quan, Phụ/Phu
 - Kết hợp với thực tế cuộc sống hiện đại
@@ -296,36 +296,36 @@ ${userContext.isInBreakup ? `- Tình trạng: Đang trải qua giai đoạn chia
 
 📝 **CẤU TRÚC TỬ VI TỔNG QUÁT YÊU CẦU:**
 
-**🌟 PHẦN 1: PHÂN TÍCH MỆNH CUNG (250-300 từ)**
+**🌟 PHẦN 1: PHÂN TÍCH MỆNH CUNG**
 - Cung Mệnh và sao chủ vận
 - Tính cách, khí chất cơ bản
 - Tiềm năng và thiên hướng phát triển
 - Mối quan hệ với Thân Cung, Quan Cung
 
-**💰 PHẦN 2: VẬN TÀI LỘC (200-250 từ)**
+**💰 PHẦN 2: VẬN TÀI LỘC**
 - Phân tích Tài Bạch Cung
 - Khả năng kiếm tiền và tích lũy
 - Thời kỳ thịnh vượng và khó khăn về tài chính
 - Hướng đầu tư và kinh doanh phù hợp
 
-**👑 PHẦN 3: SỰ NGHIỆP VÀ QUAN LỘC (200-250 từ)**
+**👑 PHẦN 3: SỰ NGHIỆP VÀ QUAN LỘC**
 - Quan Lộc Cung và các sao ảnh hưởng
 - Ngành nghề phù hợp và tiềm năng thăng tiến
 - Mối quan hệ với cấp trên, đồng nghiệp
 - Thời điểm thuận lợi cho chuyển việc, khởi nghiệp
 
-**💕 PHẦN 4: TÌNH DUYÊN VÀ HÔN NHÂN (200-250 từ)**
+**💕 PHẦN 4: TÌNH DUYÊN VÀ HÔN NHÂN**
 - Phân tích Phu/Phụ Cung
 - Đặc điểm người yêu/vợ chồng tương lai
 - Thời điểm gặp gỡ và kết hôn
 - Hạnh phúc gia đình và con cái
 
-**🌈 PHẦN 5: SỨC KHỎE VÀ TUỔI THỌ (100-150 từ)**
+**🌈 PHẦN 5: SỨC KHỎE VÀ TUỔI THỌ**
 - Tật Ách Cung và sức khỏe cần chú ý
 - Giai đoạn yếu ớt và phương pháp bảo dưỡng
 - Phong thủy và màu sắc hỗ trợ
 
-**⭐ PHẦN 6: LỜI KHUYÊN VÀ ĐỊNH HƯỚNG (100-150 từ)**
+**⭐ PHẦN 6: LỜI KHUYÊN VÀ ĐỊNH HƯỚNG**
 - Cách tận dụng ưu điểm, khắc phục nhược điểm
 - Hướng phát triển tốt nhất cho cuộc đời
 - Năm tuổi quan trọng cần chú ý
@@ -338,32 +338,32 @@ HÃY TẠO MỘT BẢN TỬ VI TỔNG QUÁT CHUYÊN SÂU VÀ CHÍNH XÁC!`;
 
 📝 **CẤU TRÚC TỬ VI NĂM ${new Date().getFullYear()} YÊU CẦU:**
 
-**🎊 PHẦN 1: TỔNG QUAN VẬN NĂM (200-250 từ)**
+**🎊 PHẦN 1: TỔNG QUAN VẬN NĂM**
 - Đại vận và tiểu vận năm nay
 - Sao chiếu mệnh chính và phụ
 - Xu hướng tổng quát về mọi mặt
 - So sánh với năm trước và dự báo năm sau
 
-**💼 PHẦN 2: SỰ NGHIỆP VÀ CÔNG VIỆC (250-300 từ)**
+**💼 PHẦN 2: SỰ NGHIỆP VÀ CÔNG VIỆC**
 - Cơ hội thăng tiến và phát triển
 - Thời điểm tốt cho chuyển việc, khởi nghiệp
 - Mối quan hệ công việc và đối tác
 - Thu nhập và thưởng thêm trong năm
 
-**💕 PHẦN 3: TÌNH DUYÊN VÀ GIA ĐÌNH (200-250 từ)**
-${userContext.hasPartner 
-  ? '- Phát triển mối quan hệ hiện tại\n- Khả năng tiến tới hôn nhân'
-  : '- Cơ hội gặp gỡ tình yêu đích thực\n- Thời điểm thuận lợi cho hẹn hò'}
+**💕 PHẦN 3: TÌNH DUYÊN VÀ GIA ĐÌNH**
+${userContext.hasPartner
+        ? '- Phát triển mối quan hệ hiện tại\n- Khả năng tiến tới hôn nhân'
+        : '- Cơ hội gặp gỡ tình yêu đích thực\n- Thời điểm thuận lợi cho hẹn hò'}
 - Hòa hợp gia đình và họ hàng
 - Vấn đề con cái (nếu có)
 
-**💰 PHẦN 4: TÀI CHÍNH VÀ ĐẦU TƯ (150-200 từ)**
+**💰 PHẦN 4: TÀI CHÍNH VÀ ĐẦU TƯ**
 - Vận tài lộc và cơ hội làm giàu
 - Hướng đầu tư phù hợp trong năm
 - Tháng nào nên thận trọng về tiền bạc
 - Hỗ trợ từ quý nhân
 
-**🌟 PHẦN 5: SỨC KHỎE VÀ PHONG THỦY (100-150 từ)**
+**🌟 PHẦN 5: SỨC KHỎE VÀ PHONG THỦY **
 - Sức khỏe cần chú ý theo từng tháng
 - Màu sắc, hướng và vật phẩm may mắn
 - Ngày tốt xấu trong năm
@@ -378,25 +378,25 @@ HÃY TẠO MỘT BẢN TỬ VI NĂM ĐẦY ĐỦ VÀ THIẾT THỰC!`;
 
 📝 **CẤU TRÚC TỬ VI TÌNH DUYÊN CHI TIẾT YÊU CẦU:**
 
-**💕 PHẦN 1: PHÂN TÍCH PHU/PHỤ CUNG CẢ HAI NGƯỜI (300-350 từ)**
+**💕 PHẦN 1: PHÂN TÍCH PHU/PHỤ CUNG CẢ HAI NGƯỜI**
 - Phân tích Phu Cung của ${userContext.name} (${userContext.birthDate})
 - Phân tích Phụ Cung của ${userContext.partnerData.name} (${userContext.partnerData.birthDate})
 - So sánh Can Chi và Ngũ Hành của cả hai
 - Mức độ tương thích theo Tử Vi truyền thống (điểm 1-10)
 
-**🌟 PHẦN 2: PHÂN TÍCH HỢP TUỔI VÀ CAN CHI (250-300 từ)**
+**🌟 PHẦN 2: PHÂN TÍCH HỢP TUỔI VÀ CAN CHI**
 - Hợp tuổi theo 12 con giáp
 - Tương sinh tương khắc ngũ hành
 - Phân tích Can Chi năm sinh của cả hai
 - Ảnh hưởng đến con cái và thế hệ sau
 
-**🔥 PHẦN 3: VẬN TÌNH DUYÊN HIỆN TẠI VÀ TƯƠNG LAI (300-350 từ)**
+**🔥 PHẦN 3: VẬN TÌNH DUYÊN HIỆN TẠI VÀ TƯƠNG LAI**
 - Đánh giá mối quan hệ ${userContext.partnerData.relationship} từ ${userContext.partnerData.startDate}
 - Các sao chiếu mệnh tình duyên năm nay
 - Thời điểm thuận lợi cho đính hôn, cưới hỏi
 - Dự đoán vận hôn nhân 3-5 năm tới
 
-**💎 PHẦN 4: LỜI KHUYÊN VÀ PHONG THỦY (200-250 từ)**
+**💎 PHẦN 4: LỜI KHUYÊN VÀ PHONG THỦY**
 - Cách hóa giải xung khắc (nếu có)
 - Màu sắc, hướng nhà, đồ vật phong thủy hỗ trợ
 - Ngày tốt cho các sự kiện quan trọng
@@ -473,28 +473,28 @@ HÃY TẠO MỘT BẢN TỬ VI TÌNH DUYÊN ĐẦY HY VỌNG CHO NGƯỜI ĐỘC
 
 📝 **CẤU TRÚC TỬ VI HÔM NAY YÊU CẦU:**
 
-**🌅 PHẦN 1: VẬN TỔNG QUÁT HÔM NAY (150-200 từ)**
+**🌅 PHẦN 1: VẬN TỔNG QUÁT HÔM NAY**
 - Cát hung tổng quát của ngày
 - Tinh thần và năng lượng
 - Các sao chiếu mệnh trong ngày
 
-**💼 PHẦN 2: CÔNG VIỆC VÀ NGƯỜI (200-250 từ)**
+**💼 PHẦN 2: CÔNG VIỆC VÀ NGƯỜI**
 - Hiệu quả làm việc và năng suất
 - Gặp gỡ quan trọng và ký kết hợp đồng
 - Tranh chấp và cách giải quyết
 - Cơ hội và thử thách bất ngờ
 
-**💖 PHẦN 3: TÌNH CẢM VÀ GIA ĐÌNH (150-200 từ)**
+**💖 PHẦN 3: TÌNH CẢM VÀ GIA ĐÌNH**
 - Mối quan hệ tình cảm
 - Hòa thuận gia đình
 - Gặp gỡ bạn bè và người thân
 
-**💵 PHẦN 4: TÀI CHÍNH VÀ MAY MẮN (100-150 từ)**
+**💵 PHẦN 4: TÀI CHÍNH VÀ MAY MẮN**
 - Chi tiêu và thu nhập trong ngày
 - Cơ hội tài chính bất ngờ
 - Số may mắn và màu sắc hỗ trợ
 
-**⚡ PHẦN 5: LỜI KHUYÊN NHANH (50-100 từ)**
+**⚡ PHẦN 5: LỜI KHUYÊN NHANH**
 - Việc nên làm và tránh
 - Giờ hoàng đạo
 - Thái độ tích cực cho ngày tốt
@@ -754,9 +754,9 @@ HÃY TẠO MỘT PHÂN TÍCH CON SỐ SÂU SẮC VÀ BỔ ÍCH!`;
 export function generateChatPrompt(
   message: string,
   userContext: UserContext,
-  chatHistory?: Array<{role: string, content: string}>
+  chatHistory?: Array<{ role: string, content: string }>
 ): string {
-  const historyContext = chatHistory && chatHistory.length > 0 
+  const historyContext = chatHistory && chatHistory.length > 0
     ? `\n📜 **LỊCH SỬ TRÒCHUYỆN TRƯỚC ĐÓ:**\n${chatHistory.slice(-6).map(msg => `${msg.role === 'user' ? '👤 Người dùng' : '🔮 Bạn'}: ${msg.content}`).join('\n')}\n`
     : '';
 
