@@ -1,7 +1,39 @@
 import { NextResponse } from 'next/server';
 import { PrismaClient } from '@prisma/client';
+import jwt from 'jsonwebtoken';
 
 const prisma = new PrismaClient();
+
+// Helper function to get user ID from JWT token
+function getUserIdFromToken(req: Request): string | null {
+  console.log('getUserIdFromToken called');
+  
+  // First try to get from middleware-set header
+  const userIdFromHeader = req.headers.get('x-user-id');
+  console.log('x-user-id header:', userIdFromHeader);
+  if (userIdFromHeader) {
+    return userIdFromHeader;
+  }
+
+  // Fallback: decode JWT token manually
+  const authHeader = req.headers.get('authorization');
+  console.log('authorization header:', authHeader);
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    console.log('No valid authorization header found');
+    return null;
+  }
+
+  const token = authHeader.split(' ')[1];
+  console.log('Token extracted:', token?.substring(0, 20) + '...');
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET!) as { userId: string };
+    console.log('Decoded token:', decoded);
+    return decoded.userId;
+  } catch (error) {
+    console.error('JWT verification failed:', error);
+    return null;
+  }
+}
 
 // Force dynamic rendering for this API route
 export const dynamic = 'force-dynamic';
@@ -11,7 +43,7 @@ export const runtime = 'nodejs';
 // GET - Lấy thông tin partner của user hiện tại
 export async function GET(req: Request) {
   try {
-    const userId = req.headers.get('x-user-id');
+    const userId = getUserIdFromToken(req);
     if (!userId) {
       return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
     }
@@ -30,8 +62,14 @@ export async function GET(req: Request) {
 // POST - Thêm partner mới
 export async function POST(req: Request) {
   try {
-    const userId = req.headers.get('x-user-id');
+    console.log('POST /api/partner - Request received');
+    console.log('Headers:', Object.fromEntries(req.headers.entries()));
+    
+    const userId = getUserIdFromToken(req);
+    console.log('UserId from token:', userId);
+    
     if (!userId) {
+      console.log('Unauthorized: No userId found');
       return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
     }
 
@@ -78,7 +116,7 @@ export async function POST(req: Request) {
 // PUT - Cập nhật thông tin partner
 export async function PUT(req: Request) {
   try {
-    const userId = req.headers.get('x-user-id');
+    const userId = getUserIdFromToken(req);
     if (!userId) {
       return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
     }
@@ -118,7 +156,7 @@ export async function PUT(req: Request) {
 // DELETE - Xóa partner (chia tay)
 export async function DELETE(req: Request) {
   try {
-    const userId = req.headers.get('x-user-id');
+    const userId = getUserIdFromToken(req);
     if (!userId) {
       return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
     }

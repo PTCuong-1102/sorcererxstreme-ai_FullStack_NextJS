@@ -44,11 +44,12 @@ export async function middleware(req: NextRequest) {
 export const config = {
   matcher: [
     '/api/tarot/:path*',
-    '/api/profile/:path*',
+    '/api/profile/:path*', 
     '/api/chat/:path*',
     '/api/astrology/:path*',
     '/api/fortune/:path*',
     '/api/numerology/:path*',
+    '/api/partner',
     '/dashboard',
     '/profile',
     '/chat',
