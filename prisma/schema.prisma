@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -11,29 +8,29 @@ datasource db {
 }
 
 model User {
-  id            String    @id @default(uuid())
-  email         String    @unique
+  id            String         @id @default(uuid())
+  email         String         @unique
   passwordHash  String
   name          String?
   birthDate     DateTime?
   birthTime     String?
-  createdAt     DateTime  @default(now())
-  partner       Partner?
+  createdAt     DateTime       @default(now())
   breakups      Breakup[]
   chatMessages  ChatMessage[]
+  partner       Partner?
   tarotReadings TarotReading[]
 }
 
 model Partner {
-  id            String   @id @default(uuid())
-  userId        String   @unique
-  name          String
-  birthDate     DateTime
-  birthTime     String
-  birthPlace    String
-  relationship  String   // married, dating, interested
-  startDate     DateTime
-  user          User     @relation(fields: [userId], references: [id])
+  id           String   @id @default(uuid())
+  userId       String   @unique
+  name         String
+  birthDate    DateTime
+  birthTime    String
+  birthPlace   String
+  relationship String
+  startDate    DateTime
+  user         User     @relation(fields: [userId], references: [id])
 }
 
 model Breakup {
@@ -50,18 +47,18 @@ model ChatMessage {
   id        String   @id @default(uuid())
   userId    String
   content   String
-  role      String   // user, assistant
-  type      String?  // text, tarot, astrology, numerology
+  role      String
+  type      String?
   createdAt DateTime @default(now())
   user      User     @relation(fields: [userId], references: [id])
 }
 
 model TarotReading {
-  id            String   @id @default(uuid())
-  userId        String
-  question      String
-  cardsDrawn    String[]
+  id             String   @id @default(uuid())
+  userId         String
+  question       String
+  cardsDrawn     String[]
   interpretation String
-  createdAt     DateTime @default(now())
-  user          User     @relation(fields: [userId], references: [id])
+  createdAt      DateTime @default(now())
+  user           User     @relation(fields: [userId], references: [id])
 }
