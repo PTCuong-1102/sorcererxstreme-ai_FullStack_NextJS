@@ -1,0 +1,67 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String    @id @default(uuid())
+  email         String    @unique
+  passwordHash  String
+  name          String?
+  birthDate     DateTime?
+  birthTime     String?
+  createdAt     DateTime  @default(now())
+  partner       Partner?
+  breakups      Breakup[]
+  chatMessages  ChatMessage[]
+  tarotReadings TarotReading[]
+}
+
+model Partner {
+  id            String   @id @default(uuid())
+  userId        String   @unique
+  name          String
+  birthDate     DateTime
+  birthTime     String
+  birthPlace    String
+  relationship  String   // married, dating, interested
+  startDate     DateTime
+  user          User     @relation(fields: [userId], references: [id])
+}
+
+model Breakup {
+  id              String    @id @default(uuid())
+  userId          String
+  partnerName     String
+  breakupDate     DateTime
+  autoDeleteDate  DateTime
+  weeklyCheckDone Boolean[]
+  user            User      @relation(fields: [userId], references: [id])
+}
+
+model ChatMessage {
+  id        String   @id @default(uuid())
+  userId    String
+  content   String
+  role      String   // user, assistant
+  type      String?  // text, tarot, astrology, numerology
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id])
+}
+
+model TarotReading {
+  id            String   @id @default(uuid())
+  userId        String
+  question      String
+  cardsDrawn    String[]
+  interpretation String
+  createdAt     DateTime @default(now())
+  user          User     @relation(fields: [userId], references: [id])
+}
