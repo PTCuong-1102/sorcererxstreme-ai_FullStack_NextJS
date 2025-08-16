@@ -6,6 +6,9 @@ import { signJWT } from '@/lib/jwt';
 
 const prisma = new PrismaClient();
 
+// Use Node.js runtime for JWT and Prisma compatibility
+export const runtime = 'nodejs';
+
 export async function POST(req: Request) {
   try {
     const { email, password } = await req.json();

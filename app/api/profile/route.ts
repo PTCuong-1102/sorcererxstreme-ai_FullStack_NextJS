@@ -6,6 +6,8 @@ const prisma = new PrismaClient();
 
 // Force dynamic rendering for this API route
 export const dynamic = 'force-dynamic';
+// Use Node.js runtime for Prisma compatibility
+export const runtime = 'nodejs';
 
 export async function GET(req: Request) {
   const userId = req.headers.get('x-user-id');

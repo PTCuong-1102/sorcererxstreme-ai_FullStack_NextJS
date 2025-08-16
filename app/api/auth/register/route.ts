@@ -5,6 +5,9 @@ import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
+// Use Node.js runtime for bcrypt and Prisma compatibility
+export const runtime = 'nodejs';
+
 export async function POST(req: Request) {
   try {
     const { email, password } = await req.json();
