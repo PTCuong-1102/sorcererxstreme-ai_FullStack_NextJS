@@ -1,0 +1,64 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String         @id @default(uuid())
+  email         String         @unique
+  passwordHash  String
+  name          String?
+  birthDate     DateTime?
+  birthTime     String?
+  createdAt     DateTime       @default(now())
+  breakups      Breakup[]
+  chatMessages  ChatMessage[]
+  partner       Partner?
+  tarotReadings TarotReading[]
+}
+
+model Partner {
+  id           String   @id @default(uuid())
+  userId       String   @unique
+  name         String
+  birthDate    DateTime
+  birthTime    String
+  birthPlace   String
+  relationship String
+  startDate    DateTime
+  user         User     @relation(fields: [userId], references: [id])
+}
+
+model Breakup {
+  id              String    @id @default(uuid())
+  userId          String
+  partnerName     String
+  breakupDate     DateTime
+  autoDeleteDate  DateTime
+  weeklyCheckDone Boolean[]
+  user            User      @relation(fields: [userId], references: [id])
+}
+
+model ChatMessage {
+  id        String   @id @default(uuid())
+  userId    String
+  content   String
+  role      String
+  type      String?
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id])
+}
+
+model TarotReading {
+  id             String   @id @default(uuid())
+  userId         String
+  question       String
+  cardsDrawn     String[]
+  interpretation String
+  createdAt      DateTime @default(now())
+  user           User     @relation(fields: [userId], references: [id])
+}
